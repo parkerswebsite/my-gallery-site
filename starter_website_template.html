@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Starter Website</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      color: #333;
+    }
+    header {
+      background: #4CAF50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav {
+      background: #333;
+      color: white;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.5rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+    main {
+      padding: 2rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .gallery figure {
+      margin: 0;
+      text-align: center;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .gallery figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    #uploadForm {
+      margin-top: 2rem;
+    }
+    #dropZone {
+      margin-top: 1rem;
+      padding: 2rem;
+      border: 2px dashed #4CAF50;
+      text-align: center;
+      background: #fff;
+      color: #555;
+      border-radius: 10px;
+    }
+    #dropZone.dragover {
+      background-color: #e0ffe0;
+      border-color: #2e7d32;
+    }
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to My Website</h1>
+  </header>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+  <main>
+    <h2>About This Site</h2>
+    <p>This is a simple starter website template. You can customize it as you like!</p>
+
+    <h2>Image Gallery</h2>
+    <div class="gallery" id="gallery">
+      <figure><a href="https://via.placeholder.com/600" data-lightbox="gallery" data-title="Gallery Image 1"><img src="https://via.placeholder.com/150" alt="Gallery Image 1"></a><figcaption>Gallery Image 1</figcaption></figure>
+      <figure><a href="https://via.placeholder.com/600" data-lightbox="gallery" data-title="Gallery Image 2"><img src="https://via.placeholder.com/150" alt="Gallery Image 2"></a><figcaption>Gallery Image 2</figcaption></figure>
+      <figure><a href="https://via.placeholder.com/600" data-lightbox="gallery" data-title="Gallery Image 3"><img src="https://via.placeholder.com/150" alt="Gallery Image 3"></a><figcaption>Gallery Image 3</figcaption></figure>
+      <figure><a href="https://via.placeholder.com/600" data-lightbox="gallery" data-title="Gallery Image 4"><img src="https://via.placeholder.com/150" alt="Gallery Image 4"></a><figcaption>Gallery Image 4</figcaption></figure>
+    </div>
+
+    <h2>Upload Your Image</h2>
+    <form id="uploadForm">
+      <input type="file" id="imageUpload" accept="image/*">
+    </form>
+
+    <div id="dropZone">Drag & Drop Images Here</div>
+  </main>
+  <footer>
+    &copy; 2025 My Website
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+  <script>
+    const uploadInput = document.getElementById('imageUpload');
+    const gallery = document.getElementById('gallery');
+    const dropZone = document.getElementById('dropZone');
+
+    function previewImage(file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const caption = prompt("Enter a caption for your image:") || 'Uploaded Image';
+
+        const figure = document.createElement('figure');
+
+        const link = document.createElement('a');
+        link.href = event.target.result;
+        link.setAttribute('data-lightbox', 'gallery');
+        link.setAttribute('data-title', caption);
+
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.alt = caption;
+
+        const figcaption = document.createElement('figcaption');
+        figcaption.textContent = caption;
+
+        link.appendChild(img);
+        figure.appendChild(link);
+        figure.appendChild(figcaption);
+        gallery.appendChild(figure);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    uploadInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) previewImage(file);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].type.startsWith('image/')) {
+          previewImage(files[i]);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
